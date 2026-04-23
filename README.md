@@ -167,6 +167,8 @@ Same skin, different language bindings:
 - [python_tk_gtk3_gtk4](https://github.com/KellerKev/python_tk_gtk3_gtk4) — Python tkinter version (native `ttk.Style` calls + Python widget classes, predates the Tcl skin file).
 - [freepascal_tk_gtk3_gtk4](https://github.com/KellerKev/freepascal_tk_gtk3_gtk4) — Free Pascal bindings, sources the same `resources/gtk_skin.tcl`.
 
+- [rust_tk_gtk3_gtk4](https://github.com/KellerKev/rust_tk_gtk3_gtk4) — Rust bindings for Tcl/Tk, hand-written FFI + `Result`-based API + closures as Tcl commands, same shared `resources/gtk_skin.tcl`.
+
 ## License
 
 MIT.
