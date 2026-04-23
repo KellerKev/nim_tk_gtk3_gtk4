@@ -1,0 +1,11 @@
+# pixi environment (lockfile is committed for reproducibility)
+.pixi/*
+!.pixi/config.toml
+
+# Project-local Nim toolchain bootstrapped by `pixi run setup`
+.local-nim/
+
+# Build artifacts
+build/
+nimcache/
+*.exe

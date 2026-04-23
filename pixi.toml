@@ -1,0 +1,64 @@
+[workspace]
+name = "nim_tk_gtk3_gtk4"
+version = "0.1.0"
+description = "Nim bindings for Tcl/Tk plus a GTK3/GTK4 skin"
+authors = ["Kevin Keller <kellerkev@gmail.com>"]
+channels = ["conda-forge"]
+platforms = ["osx-arm64", "linux-64", "linux-aarch64"]
+
+[dependencies]
+# Tk bundles Tcl on conda-forge, so one package gives us both libraries and
+# matching headers.
+tk = "*"
+# C toolchain for both Nim's bootstrap and for compiling Nim-generated C
+# (Nim emits .c files then invokes a system compiler).
+clang = "*"
+make = "*"
+# choosenim's init script needs curl + xz-utils to fetch tarballs.
+curl = "*"
+xz = "*"
+ca-certificates = "*"
+
+[activation.env]
+# Tell Nim where to find Tcl/Tk headers + libraries installed by pixi.
+CPATH = "$CONDA_PREFIX/include"
+LIBRARY_PATH = "$CONDA_PREFIX/lib"
+# Point scripts at the locally-bootstrapped Nim toolchain (populated by `setup`).
+NIM_HOME = "$PIXI_PROJECT_ROOT/.local-nim"
+PATH = "$PIXI_PROJECT_ROOT/.local-nim/bin:$PATH"
+# The nim/nimble binaries are choosenim shims that look up the active
+# toolchain under $CHOOSENIM_DIR/current. Keep it project-local.
+CHOOSENIM_DIR = "$PIXI_PROJECT_ROOT/.local-nim/.choosenim"
+CHOOSENIM_NO_ANALYTICS = "1"
+
+[tasks.setup]
+description = "Install Nim toolchain locally (first-run only)"
+cmd = "bash scripts/setup-nim.sh"
+
+[tasks.build]
+description = "Compile the demo"
+cmd = "nim c -d:release --outdir:build src/demo.nim"
+depends-on = ["setup"]
+
+[tasks.demo]
+description = "Build and run the demo (GTK4 light)"
+cmd = "./build/demo"
+depends-on = ["build"]
+
+[tasks.demo3]
+description = "Run demo with GTK3 Adwaita theme"
+cmd = "./build/demo --style gtk3"
+depends-on = ["build"]
+
+[tasks.demo4]
+description = "Run demo with GTK4 libadwaita theme"
+cmd = "./build/demo --style gtk4"
+depends-on = ["build"]
+
+[tasks.demo-dark]
+description = "Run demo in dark mode"
+cmd = "./build/demo --style gtk4 --dark"
+depends-on = ["build"]
+
+[tasks.clean]
+cmd = "rm -rf build nimcache"
